@@ -1,16 +1,28 @@
 #You can use code you wrote for the correlation exercise here.
 source("DiscreteFunctions.R")
-tree <- read.tree("____PATH_TO_TREE_OR_SOME_OTHER_WAY_OF_GETTING_A_TREE____")
-discrete.data <- read.csv(file="____PATH_TO_DATA_OR_SOME_OTHER_WAY_OF_GETTING_TRAITS____", stringsAsFactors=FALSE) #death to factors.
+source("CorrelationFunctions.R") # this isn't working?
+tree <- get_study_tree("pg_2346","tree4944")
+plot(tree,cex=0.3)
+discrete.data <- as.matrix(read.csv(file="/Users/Hailee/Desktop/taxa.csv", stringsAsFactors=FALSE,row.names=NULL))#death to factors.
+discrete.data2 <- as.matrix(read.csv(file="/Users/Hailee/Desktop/taxa.csv", stringsAsFactors=FALSE,row.names=1))#death to factors.
 
-cleaned.discrete <- CleanData(tree, discrete.data)
+latitude<- rnorm(128,mean=89,sd=0.5)
+height<-rnorm(128,mean=2,sd=0.5)
+continuous.data<-cbind(latitude,height)
+rownames(continuous.data)<-tree$tip.label
+
+
+cleaned.continuous <- CleanData(tree, continuous.data)
+cleaned.discrete <- CleanData(tree,discrete.data2)
+VisualizeData(tree, cleaned.continuous)
 
 VisualizeData(tree, cleaned.discrete)
 
 #First, let's use parsimony to look at ancestral states
-cleaned.discrete.phyDat <- phyDat(cleaned.discrete, type="______________") #phyDat is a data format used by phangorn
+cleaned.discrete.phyDat <- phyDat(cleaned.discrete$data[,"saprotrophic"], type="USER",levels=c(0,1)) #phyDat is a data format used by phangorn
 anc.p <- ancestral.pars(tree, cleaned.discrete.phyDat)
 plotAnc(tree, anc.p, 1)
+#what's happening here???
 
 #Do you see any uncertainty? What does that meean for parsimony?
 
@@ -23,7 +35,7 @@ plotAnc(tree, anc.ml, 1)
 #What does uncertainty mean?
 
 #How many changes are there in your trait under parsimony? 
-parsimony.score <- ____some_function_____(tree, cleanded.discrete.phyDat)
+parsimony.score <-parsimony(tree, cleanded.discrete.phyDat)
 print(parsimony.score)
 
 #Can you estimate the number of changes under a likelihood-based model? 

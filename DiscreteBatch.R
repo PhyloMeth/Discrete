@@ -1,18 +1,21 @@
 #You can use code you wrote for the correlation exercise here.
-source("DiscreteFunctions.R")
-tree <- read.tree("____PATH_TO_TREE_OR_SOME_OTHER_WAY_OF_GETTING_A_TREE____")
-discrete.data <- read.csv(file="____PATH_TO_DATA_OR_SOME_OTHER_WAY_OF_GETTING_TRAITS____", stringsAsFactors=FALSE) #death to factors.
+source("~/phyloMeth.packages/DiscreteTraits/DiscreteFunctions.R")
+tree <- read.tree("~/R/Vascular_Plants_rooted.dated.tre")
+#discrete.data <- read.csv(file="~/Documents/Data/sample.binary.data", stringsAsFactors=FALSE, row.names=1) #death to factors.
 
-cleaned.discrete <- CleanData(tree, discrete.data)
+ploidy.data <- read.csv(file="~/Documents/Data/ploidy.data.txt", stringsAsFactors=FALSE, row.names=1)
+cleaned.discrete <- CleanData(tree, ploidy.data, sort=TRUE)
 
-VisualizeData(tree, cleaned.discrete)
+
+VisualizeData(rand.tree, cleaned.discrete)
 
 #First, let's use parsimony to look at ancestral states
-cleaned.discrete.phyDat <- phyDat(cleaned.discrete, type="______________") #phyDat is a data format used by phangorn
+
+cleaned.discrete.phyDat <- phyDat(cleaned.discrete$data, type="USER", levels=c("2","4","6","8","12")) #phyDat is a data format used by phangorn
 anc.p <- ancestral.pars(tree, cleaned.discrete.phyDat)
 plotAnc(tree, anc.p, 1)
-
-#Do you see any uncertainty? What does that meean for parsimony?
+#save the data file as an R data object
+#Do you see any uncertainty? What does that mean for parsimony?
 
 #now plot the likelihood reconstruction
 anc.ml <- ancestral.pml(pml(tree, cleaned.discrete.phyDat), type="ml")

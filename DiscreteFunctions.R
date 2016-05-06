@@ -42,3 +42,13 @@ CleanData <- function(phy, data) {
 	dataclean <- treedata(phy,data)
 	return(dataclean)
 }
+
+RunDeltaModel<-function(timetransform, phy, data) {
+	print(paste("Now starting model",timetransform))
+	return(fitDiscrete(phy, data, model="ARD", transform=timetransform))
+}
+
+RunCorrModel<-function(correlated, phy, data) {
+	print(paste("Now starting model",correlated))
+	return(corDISC(phy, data, ntraits=2, model=correlated, node.states="joint"))
+}
